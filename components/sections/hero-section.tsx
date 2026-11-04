@@ -7,7 +7,7 @@ import { SectionShell } from '@/components/primitives/section-shell';
 import { HeroPhoneMockup } from '@/components/mockups/mockup-screens';
 import { FLOAT_TRANSITION, FLOAT_TRANSITION_LONG, MOTION_DURATION, MOTION_EASE } from '@/lib/motion';
 import { scrollToId, trackEvent } from '@/lib/tracking';
-import type { LandingContent, Locale, MockupDocument } from '@/lib/types';
+import type { LandingContent, Locale, MockupDocument, PricingPlanKey, WaitlistSource } from '@/lib/types';
 
 const accentMap = {
   sky: 'rgba(169, 205, 225, 0.54)',
@@ -23,19 +23,19 @@ const chipToneMap = {
 
 const companionPositions = {
   'pet-travel': [
-    'left-0 top-12 xl:-left-4',
-    'right-0 top-28 xl:-right-6',
-    'left-10 bottom-4 xl:left-0',
+    'left-2 top-10 xl:-left-2',
+    'right-1 top-24 xl:-right-3',
+    'left-12 bottom-5 xl:left-3',
   ],
   'family-docs': [
-    'left-2 top-16 xl:-left-2',
-    'right-0 top-28 xl:-right-4',
-    'left-14 bottom-4 xl:left-6',
+    'left-3 top-14 xl:left-1',
+    'right-1 top-24 xl:-right-2',
+    'left-14 bottom-5 xl:left-8',
   ],
   general: [
-    'left-1 top-16 xl:left-0',
-    'right-2 top-28 xl:-right-2',
-    'left-16 bottom-3 xl:left-8',
+    'left-3 top-14 xl:left-1',
+    'right-3 top-24 xl:right-1',
+    'left-16 bottom-4 xl:left-10',
   ],
 } as const;
 
@@ -98,35 +98,36 @@ interface HeroSectionProps {
   content: LandingContent;
   locale: Locale;
   onLocaleChange: (locale: Locale) => void;
+  onOpenWaitlist: (source: WaitlistSource, plan?: PricingPlanKey) => void;
 }
 
-export function HeroSection({ content, locale, onLocaleChange }: HeroSectionProps) {
+export function HeroSection({ content, locale, onLocaleChange, onOpenWaitlist }: HeroSectionProps) {
   const reduceMotion = useReducedMotion();
   const chipTones = chipToneMap[content.variant];
   const positions = companionPositions[content.variant];
 
   return (
-    <SectionShell density="hero" className="overflow-hidden">
-      <div className="grid items-center gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 xl:gap-12">
-        <Reveal preset="hero" className="relative z-10">
-          <div className="mb-4 flex justify-start">
+    <SectionShell density="hero" viewport="hero" className="overflow-hidden">
+      <div className="hero-layout-grid grid items-center lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+        <Reveal preset="hero" className="hero-copy-column relative z-10">
+          <div className="mb-3 flex justify-start">
             <LanguageToggle locale={locale} onChange={onLocaleChange} />
           </div>
 
-          <p className="mb-3 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--ink-secondary)]">
+          <p className="mb-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--ink-secondary)]">
             {content.hero.eyebrow}
           </p>
 
-          <h1 className="text-balance text-[2.7rem] font-semibold tracking-tight text-[var(--ink-primary)] sm:text-[3.35rem] sm:leading-[1.02] lg:text-[4.2rem] lg:leading-[0.96]">
+          <h1 className="hero-title text-balance font-semibold tracking-tight text-[var(--ink-primary)]">
             <span className="display-font italic text-[var(--ink-primary)]">LifeDocs</span>
             <span className="mt-2 block">{content.hero.title}</span>
           </h1>
 
-          <p className="mt-4 max-w-xl text-pretty text-base leading-7 text-[var(--ink-secondary)] sm:text-lg sm:leading-8">
+          <p className="hero-subtitle max-w-xl text-pretty text-base leading-7 text-[var(--ink-secondary)] sm:text-lg sm:leading-8">
             {content.hero.subtitle}
           </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="hero-actions flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Button
               id="hero-cta"
               data-event="hero_cta_click"
@@ -137,7 +138,7 @@ export function HeroSection({ content, locale, onLocaleChange }: HeroSectionProp
                   placement: 'hero_primary',
                   section: 'hero',
                 });
-                scrollToId('pricing');
+                onOpenWaitlist('hero_primary', 'plus');
               }}
             >
               {content.hero.primaryCta}
@@ -160,7 +161,7 @@ export function HeroSection({ content, locale, onLocaleChange }: HeroSectionProp
             </Button>
           </div>
 
-          <div className="mt-4 flex max-w-xl flex-wrap gap-2.5">
+          <div className="hero-chips-row flex max-w-xl flex-wrap gap-2.5">
             {content.hero.chips.map((chip, index) => (
               <Chip key={chip} tone={chipTones[index % chipTones.length]} animated={index === 0}>
                 {chip}
@@ -170,7 +171,7 @@ export function HeroSection({ content, locale, onLocaleChange }: HeroSectionProp
         </Reveal>
 
         <motion.div
-          className="relative mx-auto w-full max-w-[40rem] lg:mx-0 lg:max-w-none"
+          className="hero-visual-wrap relative mx-auto w-full lg:mx-0 lg:max-w-none"
           initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 24 }}
           animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
           transition={reduceMotion ? undefined : { duration: MOTION_DURATION.hero, ease: MOTION_EASE }}
@@ -205,7 +206,7 @@ export function HeroSection({ content, locale, onLocaleChange }: HeroSectionProp
           <motion.div
             animate={reduceMotion ? undefined : { y: [0, -15, 0], rotate: [0, 1.2, 0] }}
             transition={reduceMotion ? undefined : FLOAT_TRANSITION}
-            className="relative z-10 mx-auto w-full max-w-[24rem] sm:max-w-[25.5rem] lg:max-w-[27rem]"
+            className="hero-phone-frame relative z-10 mx-auto w-full max-w-[23rem] sm:max-w-[24.5rem]"
           >
             <HeroPhoneMockup mockup={content.preview.mockup} variant={content.variant} accent={content.accent} />
           </motion.div>

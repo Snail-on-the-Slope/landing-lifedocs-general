@@ -13,14 +13,14 @@ export function HowItWorksSection({ content }: { content: LandingContent }) {
   ];
 
   return (
-    <SectionShell id="how-it-works">
+    <SectionShell id="how-it-works" density="compact" viewport="dense">
       <SectionHeading
         eyebrow={content.howItWorks.eyebrow}
         title={content.howItWorks.heading}
         body={content.howItWorks.body}
       />
 
-      <div className="grid gap-5 lg:grid-cols-4">
+      <div className="grid gap-4 lg:grid-cols-4 lg:gap-5">
         {content.howItWorks.steps.map((step, index) => (
           <Reveal
             key={step.title}

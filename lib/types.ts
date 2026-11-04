@@ -12,6 +12,18 @@ export type ValidationEvent =
 
 export type LandingVariant = 'pet-travel' | 'family-docs' | 'general';
 export type PricingPlanKey = 'plus' | 'family';
+export type DeviceType = 'mobile' | 'tablet' | 'desktop' | 'unknown';
+export type WaitlistSource =
+  | 'hero_primary'
+  | 'final_cta'
+  | 'sticky_mobile'
+  | 'pricing_plus'
+  | 'pricing_family'
+  | 'pricing_form';
+export type LandingAppId =
+  | 'landing-pet-travel-docs'
+  | 'landing-family-documents-deadlines'
+  | 'landing-lifedocs-general';
 
 export interface TrackEventPayload {
   variant: LandingVariant;
@@ -125,6 +137,7 @@ export interface WaitlistCopy {
   validationLabelTemplate: string;
   noChargeLabel: string;
   invalidEmail: string;
+  submitError: string;
   successEyebrow: string;
   successTitleTemplate: string;
   successBody: string;
@@ -205,12 +218,44 @@ export interface LandingContent {
 
 export type LocalizedLandingContent = Record<Locale, LandingContent>;
 
-export interface WaitlistEntry {
+export interface AttributionSnapshot {
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmTerm?: string;
+  utmContent?: string;
+  ref?: string;
+  gclid?: string;
+  fbclid?: string;
+  landingPath?: string;
+  capturedAt?: string;
+}
+
+export interface WaitlistSubmitPayload {
   email: string;
-  emailDomain: string;
-  source: string;
+  source: WaitlistSource;
   variant: LandingVariant;
   plan: PricingPlanKey;
   locale: Locale;
-  createdAt: string;
+  deviceType: DeviceType;
+  landingApp: LandingAppId;
+  landingPath: string;
+  referrer?: string;
+  utmFirst: AttributionSnapshot;
+  utmLast: AttributionSnapshot;
+  clientSessionId?: string;
+  consentUpdates: boolean;
+  metadata?: Record<string, unknown>;
 }
+
+export type WaitlistFunctionResponse =
+  | {
+      ok: true;
+      contactId: string;
+      intentId: string;
+    }
+  | {
+      ok: false;
+      error: string;
+      message?: string;
+    };

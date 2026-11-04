@@ -12,10 +12,10 @@ export function UseCasesSection({ content }: { content: LandingContent }) {
   ];
 
   return (
-    <SectionShell>
+    <SectionShell viewport="balanced">
       <SectionHeading eyebrow={content.useCases.eyebrow} title={content.useCases.heading} body={content.useCases.body} />
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
         {content.useCases.cards.map((card, index) => (
           <Reveal
             key={card.title}

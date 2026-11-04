@@ -16,7 +16,7 @@ export function FaqSection({ content, locale }: FaqSectionProps) {
   const [openId, setOpenId] = useState<string | null>(content.faq.items[0]?.id ?? null);
 
   return (
-    <SectionShell>
+    <SectionShell density="compact" viewport="dense">
       <SectionHeading eyebrow={content.faq.eyebrow} title={content.faq.heading} body={content.faq.body} />
 
       <div className="mx-auto max-w-3xl space-y-3">

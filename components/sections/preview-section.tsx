@@ -10,7 +10,7 @@ export function PreviewSection({ content }: { content: LandingContent }) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <SectionShell id="preview" density="compact">
+    <SectionShell id="preview" density="compact" viewport="balanced">
       <SectionHeading eyebrow={content.preview.eyebrow} title={content.preview.heading} body={content.preview.body} />
 
       <motion.div
@@ -21,7 +21,7 @@ export function PreviewSection({ content }: { content: LandingContent }) {
         <PreviewMockup mockup={content.preview.mockup} variant={content.variant} accent={content.accent} />
       </motion.div>
 
-      <Reveal preset="card" className="mx-auto mt-5 max-w-3xl text-center text-sm leading-7 text-[var(--ink-secondary)]">
+      <Reveal preset="card" className="mx-auto mt-4 max-w-3xl text-center text-sm leading-7 text-[var(--ink-secondary)]">
         {content.preview.note}
       </Reveal>
     </SectionShell>

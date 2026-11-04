@@ -6,6 +6,7 @@ interface SectionShellProps {
   className?: string;
   contentClassName?: string;
   density?: 'hero' | 'default' | 'compact';
+  viewport?: 'hero' | 'balanced' | 'dense' | 'natural' | 'cta';
 }
 
 const densityClasses = {
@@ -14,15 +15,24 @@ const densityClasses = {
   compact: 'section-padding-compact',
 };
 
+const viewportClasses = {
+  hero: 'section-viewport-hero',
+  balanced: 'section-viewport-balanced',
+  dense: 'section-viewport-dense',
+  natural: 'section-viewport-natural',
+  cta: 'section-viewport-cta',
+};
+
 export function SectionShell({
   id,
   children,
   className = '',
   contentClassName = '',
   density = 'default',
+  viewport = 'natural',
 }: SectionShellProps) {
-  const shellClassName = `${densityClasses[density]} relative ${className}`.trim();
-  const innerClassName = `${density === 'hero' ? 'max-w-[1160px]' : 'max-w-6xl'} mx-auto ${contentClassName}`.trim();
+  const shellClassName = `section-shell ${densityClasses[density]} ${viewportClasses[viewport]} relative ${className}`.trim();
+  const innerClassName = `section-inner ${density === 'hero' ? 'max-w-[1160px]' : 'max-w-6xl'} ${contentClassName}`.trim();
 
   return (
     <section id={id} className={shellClassName}>

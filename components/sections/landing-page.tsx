@@ -1,6 +1,7 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
+import { WaitlistModal } from '@/components/forms/waitlist-modal';
 import { HeroSection } from '@/components/sections/hero-section';
 import { ProblemSection } from '@/components/sections/problem-section';
 import { SolutionSection } from '@/components/sections/solution-section';
@@ -22,7 +23,7 @@ import {
   persistLocale,
   subscribeLocale,
 } from '@/lib/i18n';
-import type { LocalizedLandingContent, LocalizedSiteMeta } from '@/lib/types';
+import type { LocalizedLandingContent, LocalizedSiteMeta, PricingPlanKey, WaitlistSource } from '@/lib/types';
 
 interface LandingPageProps {
   contentByLocale: LocalizedLandingContent;
@@ -31,6 +32,9 @@ interface LandingPageProps {
 
 export function LandingPage({ contentByLocale, siteMetaByLocale }: LandingPageProps) {
   const locale = useSyncExternalStore(subscribeLocale, getLocaleSnapshot, getLocaleServerSnapshot);
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlanKey>('plus');
+  const [waitlistSource, setWaitlistSource] = useState<WaitlistSource>('hero_primary');
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   const content = contentByLocale[locale] ?? contentByLocale[defaultLocale];
   const siteMeta = siteMetaByLocale[locale] ?? siteMetaByLocale[defaultLocale];
@@ -39,11 +43,22 @@ export function LandingPage({ contentByLocale, siteMetaByLocale }: LandingPagePr
     persistLocale(nextLocale);
   };
 
+  const openWaitlist = (source: WaitlistSource, nextPlan: PricingPlanKey = 'plus') => {
+    setWaitlistSource(source);
+    setSelectedPlan(nextPlan);
+    setIsWaitlistOpen(true);
+  };
+
   return (
     <main className="pb-24 text-[var(--ink-primary)] md:pb-0">
       <LocalizationSync locale={locale} siteMeta={siteMeta} />
       <PageTracking variant={content.variant} locale={locale} />
-      <HeroSection content={content} locale={locale} onLocaleChange={handleLocaleChange} />
+      <HeroSection
+        content={content}
+        locale={locale}
+        onLocaleChange={handleLocaleChange}
+        onOpenWaitlist={openWaitlist}
+      />
       <ProblemSection content={content} />
       <SolutionSection content={content} />
       <FeaturesSection content={content} />
@@ -51,10 +66,23 @@ export function LandingPage({ contentByLocale, siteMetaByLocale }: LandingPagePr
       <PreviewSection content={content} />
       <TrustSection content={content} />
       <UseCasesSection content={content} />
-      <PricingSection content={content} locale={locale} />
+      <PricingSection content={content} locale={locale} onOpenWaitlist={openWaitlist} />
       <FaqSection content={content} locale={locale} />
-      <FinalCtaSection content={content} locale={locale} />
-      <StickyMobileCta label={content.hero.primaryCta} variant={content.variant} locale={locale} />
+      <FinalCtaSection content={content} locale={locale} onOpenWaitlist={openWaitlist} />
+      <StickyMobileCta
+        label={content.hero.primaryCta}
+        variant={content.variant}
+        locale={locale}
+        onOpenWaitlist={openWaitlist}
+      />
+      <WaitlistModal
+        isOpen={isWaitlistOpen}
+        onClose={() => setIsWaitlistOpen(false)}
+        content={content}
+        locale={locale}
+        selectedPlan={selectedPlan}
+        source={waitlistSource}
+      />
     </main>
   );
 }

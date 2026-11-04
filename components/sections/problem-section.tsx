@@ -11,10 +11,10 @@ export function ProblemSection({ content }: { content: LandingContent }) {
   ];
 
   return (
-    <SectionShell>
+    <SectionShell viewport="balanced">
       <SectionHeading eyebrow={content.problem.eyebrow} title={content.problem.heading} body={content.problem.body} />
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3 lg:gap-5">
         {content.problem.cards.map((card, index) => (
           <Reveal
             key={card.title}

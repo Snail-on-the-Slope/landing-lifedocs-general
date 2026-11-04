@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { markScrollThreshold, trackEvent } from '@/lib/tracking';
+import { captureAttributionFromLocation } from '@/lib/utm';
 import type { LandingVariant, Locale } from '@/lib/types';
 
 interface PageTrackingProps {
@@ -9,6 +10,8 @@ interface PageTrackingProps {
 
 export function PageTracking({ variant, locale }: PageTrackingProps) {
   useEffect(() => {
+    captureAttributionFromLocation();
+
     const onScroll = () => {
       const scrollTop = window.scrollY;
       const height = document.documentElement.scrollHeight - window.innerHeight;

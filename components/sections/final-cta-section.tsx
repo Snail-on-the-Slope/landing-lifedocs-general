@@ -2,17 +2,18 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/primitives/button';
 import { Reveal } from '@/components/primitives/reveal';
 import { SectionShell } from '@/components/primitives/section-shell';
-import { scrollToId, trackEvent } from '@/lib/tracking';
-import type { LandingContent, Locale } from '@/lib/types';
+import { trackEvent } from '@/lib/tracking';
+import type { LandingContent, Locale, PricingPlanKey, WaitlistSource } from '@/lib/types';
 
 interface FinalCtaSectionProps {
   content: LandingContent;
   locale: Locale;
+  onOpenWaitlist: (source: WaitlistSource, plan?: PricingPlanKey) => void;
 }
 
-export function FinalCtaSection({ content, locale }: FinalCtaSectionProps) {
+export function FinalCtaSection({ content, locale, onOpenWaitlist }: FinalCtaSectionProps) {
   return (
-    <SectionShell density="compact" className="pb-32 md:pb-24">
+    <SectionShell density="compact" viewport="cta" className="pb-32 md:pb-24">
       <Reveal preset="card" className="surface-card-strong relative overflow-hidden rounded-[36px] p-8 text-center sm:p-10 lg:p-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(169,205,225,0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(231,181,156,0.2),transparent_32%)]" />
         <div className="relative z-10">
@@ -34,7 +35,7 @@ export function FinalCtaSection({ content, locale }: FinalCtaSectionProps) {
                   placement: 'final_cta',
                   section: 'final_cta',
                 });
-                scrollToId('pricing');
+                onOpenWaitlist('final_cta', 'plus');
               }}
             >
               {content.finalCta.cta}

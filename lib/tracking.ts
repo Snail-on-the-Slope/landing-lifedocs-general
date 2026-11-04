@@ -1,8 +1,7 @@
 'use client';
 
-import type { TrackEventPayload, ValidationEvent, WaitlistEntry } from '@/lib/types';
+import type { TrackEventPayload, ValidationEvent } from '@/lib/types';
 
-export const WAITLIST_STORAGE_KEY = 'lifedocs_waitlist_entries';
 export const SCROLL_MARKERS_KEY = 'lifedocs_scroll_markers';
 const SCROLL_SESSION_KEY = 'lifedocs_scroll_session';
 
@@ -31,14 +30,6 @@ export function scrollToId(id: string) {
   element.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-export function saveWaitlistEntry(entry: WaitlistEntry) {
-  if (typeof window === 'undefined') return;
-
-  const current = readJsonArray<WaitlistEntry>(WAITLIST_STORAGE_KEY);
-  current.push(entry);
-  window.localStorage.setItem(WAITLIST_STORAGE_KEY, JSON.stringify(current));
-}
-
 export function getScrollSessionId() {
   if (typeof window === 'undefined') return 'server';
 
@@ -65,17 +56,6 @@ export function markScrollThreshold(variant: string, threshold: 50 | 90) {
   markers[key] = [...fired, threshold];
   window.localStorage.setItem(SCROLL_MARKERS_KEY, JSON.stringify(markers));
   return true;
-}
-
-function readJsonArray<T>(key: string): T[] {
-  if (typeof window === 'undefined') return [];
-
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T[]) : [];
-  } catch {
-    return [];
-  }
 }
 
 function readJsonObject(key: string): Record<string, unknown> {

@@ -14,10 +14,10 @@ export function SolutionSection({ content }: { content: LandingContent }) {
   ];
 
   return (
-    <SectionShell>
+    <SectionShell viewport="balanced">
       <SectionHeading eyebrow={content.solution.eyebrow} title={content.solution.heading} body={content.solution.body} />
 
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3 lg:gap-5">
         {content.solution.pillars.map((pillar, index) => {
           const Icon = icons[index] ?? FileText;
           return (

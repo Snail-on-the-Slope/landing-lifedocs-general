@@ -54,10 +54,10 @@ export function FeaturesSection({ content }: { content: LandingContent }) {
   ];
 
   return (
-    <SectionShell>
+    <SectionShell density="compact" viewport="dense">
       <SectionHeading eyebrow={content.features.eyebrow} title={content.features.heading} body={content.features.body} />
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 lg:gap-5">
         {content.features.cards.map((card, index) => {
           const Icon = iconMap[card.icon];
           const tone = tonePairs[index % tonePairs.length];

@@ -15,10 +15,10 @@ export function TrustSection({ content }: { content: LandingContent }) {
   ];
 
   return (
-    <SectionShell>
+    <SectionShell viewport="balanced">
       <SectionHeading eyebrow={content.trust.eyebrow} title={content.trust.heading} body={content.trust.body} />
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
         {content.trust.bullets.map((bullet, index) => {
           const Icon = icons[index] ?? ShieldCheck;
           return (
